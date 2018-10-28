@@ -53,6 +53,13 @@ describe('Pawn', () => {
     p.moveTo(forwardOneSquare)
     expect(p.canMoveTo(farSquare)).toBeFalsy()
     expect(p.canMoveTo(startSquare)).toBeFalsy()
+    p = new Pawn(startSquare, true)
+    expect(p.canMoveTo(forwardOneSquare)).toBeFalsy()
+    var forwardTwoSquares = badWhiteBoard.getSquare(3, 1)
+    expect(p.canMoveTo(forwardTwoSquares)).toBeFalsy()
+    badWhiteBoard.getSquare(2, 1).inbounds = false
+    badWhiteBoard.getSquare(2, 1).piece = undefined
+    expect(p.canMoveTo(forwardTwoSquares)).toBeFalsy()
   })
 
   it('evaluates black moves correctly', () => {
