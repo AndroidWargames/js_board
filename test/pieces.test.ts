@@ -38,6 +38,23 @@ describe('Pawn', () => {
     expect(p.canMoveTo(forwardTwoSquares)).toBeTruthy()
   })
 
+  it('evaluates invalid white moves correctly', () => {
+    var badWhiteBoard = newBoard()
+    var startSquare = badWhiteBoard.getSquare(1, 1)
+    var p = new Pawn(startSquare, true)
+    expect(p.canMoveTo(startSquare)).toBeFalsy()
+    var farSquare = badWhiteBoard.getSquare(4, 1)
+    expect(p.canMoveTo(farSquare)).toBeFalsy()
+    var sideSquare = badWhiteBoard.getSquare(2, 2)
+    expect(p.canMoveTo(sideSquare)).toBeFalsy()
+    var backSquare = badWhiteBoard.getSquare(0, 1)
+    expect(p.canMoveTo(backSquare)).toBeFalsy()
+    var forwardOneSquare = badWhiteBoard.getSquare(2, 1)
+    p.moveTo(forwardOneSquare)
+    expect(p.canMoveTo(farSquare)).toBeFalsy()
+    expect(p.canMoveTo(startSquare)).toBeFalsy()
+  })
+
   it('evaluates black moves correctly', () => {
     var blackBoard = newBoard()
     var p = new Pawn(blackBoard.getSquare(4, 1), false)
