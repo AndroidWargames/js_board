@@ -24,6 +24,6 @@ export default class Square {
     if (this.isEmpty()) {
       return false
     }
-    return (this.piece!.white = white)
+    return this.piece!.white == white
   }
 }

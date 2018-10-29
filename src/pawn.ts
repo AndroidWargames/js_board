@@ -41,13 +41,18 @@ export default class Pawn {
     if (s == undefined || this.square == undefined) {
       return false
     }
+    if (!s.inbounds) {
+      return false
+    }
     if (!s.hasPieceWithColor(!this.white)) {
       return false
     }
     if (Math.abs(s.column - this.square.column) != 1) {
       return false
     }
-    if (s.row - this.square.row != this.moveDirection()) return false
+    if (s.row - this.square.row != this.moveDirection()) {
+      return false
+    }
     return true
   }
 
