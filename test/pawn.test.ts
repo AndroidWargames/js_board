@@ -1,6 +1,6 @@
 import Board from '../src/board'
 import Square from '../src/square'
-import Pawn from '../src/pieces'
+import Pawn from '../src/pawn'
 
 function newBoard() {
   var shape = ['OOOOO', 'OOOOO', 'OOOOO', 'OOOOO', 'OOOOO']
@@ -71,5 +71,29 @@ describe('Pawn', () => {
     expect(p.canMoveTo(forwardTwoSquares)).toBeTruthy()
     p.moveTo(forwardOneSquare)
     expect(p.canMoveTo(forwardTwoSquares)).toBeTruthy()
+  })
+
+  it('evaluates invalid black moves correctly', () => {
+    var badBlackBoard = newBoard()
+    var startSquare = badBlackBoard.getSquare(3, 1)
+    var p = new Pawn(startSquare, false)
+    expect(p.canMoveTo(startSquare)).toBeFalsy()
+    var farSquare = badBlackBoard.getSquare(0, 1)
+    expect(p.canMoveTo(farSquare)).toBeFalsy()
+    var sideSquare = badBlackBoard.getSquare(2, 2)
+    expect(p.canMoveTo(sideSquare)).toBeFalsy()
+    var backSquare = badBlackBoard.getSquare(4, 1)
+    expect(p.canMoveTo(backSquare)).toBeFalsy()
+    var forwardOneSquare = badBlackBoard.getSquare(2, 1)
+    p.moveTo(forwardOneSquare)
+    expect(p.canMoveTo(farSquare)).toBeFalsy()
+    expect(p.canMoveTo(startSquare)).toBeFalsy()
+    p = new Pawn(startSquare, false)
+    expect(p.canMoveTo(forwardOneSquare)).toBeFalsy()
+    var forwardTwoSquares = badBlackBoard.getSquare(1, 1)
+    expect(p.canMoveTo(forwardTwoSquares)).toBeFalsy()
+    badBlackBoard.getSquare(2, 1).inbounds = false
+    badBlackBoard.getSquare(2, 1).piece = undefined
+    expect(p.canMoveTo(forwardTwoSquares)).toBeFalsy()
   })
 })

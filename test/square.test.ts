@@ -1,5 +1,5 @@
 import Square from '../src/square'
-import Pawn from '../src/pieces'
+import Pawn from '../src/pawn'
 import Board from '../src/board'
 
 var shape = ['OOOOO', 'OOOOO', 'OOOOO', 'OOOOO', 'OOOOO']
