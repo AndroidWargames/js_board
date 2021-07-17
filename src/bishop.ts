@@ -12,27 +12,30 @@ export default class Bishop {
   }
 
   canMoveTo(s: Square) {
-    if (s == undefined || this.square == undefined) {
+    if (this.square == undefined) {
       return false
     }
-    return this.canReachDiagonally(s, false)
+    if (!s.isEmpty()) {
+      return false
+    }
+    return this.canReachDiagonally(s)
   }
 
   canAttack(s: Square) {
-    if (s == undefined || this.square == undefined) {
+    if (this.square == undefined) {
       return false
     }
     if (!s.hasPieceWithColor(!this.white)) {
       return false
     }
-    return this.canReachDiagonally(s, true)
+    return this.canReachDiagonally(s)
   }
 
-  canReachDiagonally(s: Square, allowPiece: boolean): boolean {
-    if (s == undefined || this.square == undefined) {
+  canReachDiagonally(s: Square): boolean {
+    if (this.square == undefined || this.square == s) {
       return false
     }
-    if ((!allowPiece && !s.isEmpty()) || !s.inbounds) {
+    if (!s.inbounds) {
       return false
     }
     var columnDifference = s.column - this.square.column
@@ -44,7 +47,12 @@ export default class Bishop {
     var nearerRow = s.row - rowDifference / Math.abs(rowDifference)
     var nearerColumn = s.column - columnDifference / Math.abs(columnDifference)
     var nearerSquare = board.getSquare(nearerRow, nearerColumn)
-    return nearerSquare == this.square || this.canReachDiagonally(nearerSquare, false)
+    if (nearerSquare == this.square) {
+      return true
+    } else if (!nearerSquare.isEmpty() || !s.inbounds) {
+      return false
+    }
+    return this.canReachDiagonally(nearerSquare)
   }
 
   moveTo(s: Square) {

@@ -124,4 +124,18 @@ describe('bishop', () => {
     var enemy = new Bishop(outOfBounds, false)
     expect(whiteBishop.canAttack(outOfBounds)).toBeFalsy()
   })
+
+  it('should not move from undefined squares', () => {
+    var board = newBoard()
+    var startSquare = board.getSquare(0, 0)
+    var bishop = new Bishop(startSquare, true)
+    bishop.square = undefined
+
+    var newSquare = board.getSquare(1, 1)
+    expect(bishop.canMoveTo(newSquare)).toBeFalsy()
+
+    var enemySquare = board.getSquare(1, 1)
+    var enemyBishop = new Bishop(enemySquare, false)
+    expect(bishop.canAttack(enemySquare)).toBeFalsy()
+  })
 })
