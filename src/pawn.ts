@@ -1,15 +1,8 @@
 import Square from '../src/square'
+import Piece from '../src/piece'
+import { Color } from '../src/color'
 
-export default class Pawn {
-  square?: Square
-  white: boolean
-  hasMoved: boolean
-  constructor(square: Square, white: boolean) {
-    this.square = square
-    this.square.piece = this
-    this.white = white
-    this.hasMoved = false
-  }
+export default class Pawn extends Piece {
   canMoveTo(s: Square) {
     if (s == undefined || this.square == undefined) {
       return false
@@ -20,7 +13,7 @@ export default class Pawn {
     if (s.column != this.square.column) {
       return false
     }
-    var allowedMoveDistance = this.hasMoved ? 1 : 2
+    var allowedMoveDistance = this.startingRank() == this.square.row ? 2 : 1
     var actualMoveDistance = (s.row - this.square.row) * this.moveDirection()
     if (actualMoveDistance <= 0 || actualMoveDistance > allowedMoveDistance) return false
     if (actualMoveDistance == 2) {
@@ -34,7 +27,11 @@ export default class Pawn {
   }
 
   moveDirection() {
-    return this.white ? 1 : -1
+    return this.color == Color.White ? 1 : -1
+  }
+
+  startingRank() {
+    return this.color == Color.White ? 1 : 6
   }
 
   canAttack(s: Square) {
@@ -44,7 +41,7 @@ export default class Pawn {
     if (!s.inbounds) {
       return false
     }
-    if (!s.hasPieceWithColor(!this.white)) {
+    if (s.isEmpty() || s.hasPieceWithColor(this.color)) {
       return false
     }
     if (Math.abs(s.column - this.square.column) != 1) {
@@ -54,12 +51,5 @@ export default class Pawn {
       return false
     }
     return true
-  }
-
-  moveTo(s: Square) {
-    this.square!.piece = undefined
-    this.square = s
-    s.piece = this
-    this.hasMoved = true
   }
 }

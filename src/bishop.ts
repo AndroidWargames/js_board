@@ -1,17 +1,9 @@
 import Square from '../src/square'
+import Piece from '../src/piece'
+import { Color } from '../src/color'
 
-export default class Bishop {
-  square?: Square
-  white: boolean
-  hasMoved: boolean
-  constructor(square: Square, white: boolean) {
-    this.square = square
-    this.square.piece = this
-    this.white = white
-    this.hasMoved = false
-  }
-
-  canMoveTo(s: Square) {
+export default class Bishop extends Piece {
+  canMoveTo(s: Square): boolean {
     if (this.square == undefined) {
       return false
     }
@@ -25,7 +17,7 @@ export default class Bishop {
     if (this.square == undefined) {
       return false
     }
-    if (!s.hasPieceWithColor(!this.white)) {
+    if (s.isEmpty() || s.hasPieceWithColor(this.color)) {
       return false
     }
     return this.canReachDiagonally(s)
@@ -53,12 +45,5 @@ export default class Bishop {
       return false
     }
     return this.canReachDiagonally(nearerSquare)
-  }
-
-  moveTo(s: Square) {
-    this.square!.piece = undefined
-    this.square = s
-    s.piece = this
-    this.hasMoved = true
   }
 }

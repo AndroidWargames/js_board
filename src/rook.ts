@@ -1,38 +1,32 @@
 import Square from '../src/square'
+import Piece from './piece'
 
-export default class Rook {
-  square?: Square
-  white: boolean
-  hasMoved: boolean
-  constructor(square: Square, white: boolean) {
-    this.square = square
-    this.square.piece = this
-    this.white = white
-    this.hasMoved = false
-  }
-
+export default class Rook extends Piece {
   canMoveTo(s: Square) {
-    if (s == undefined || this.square == undefined) {
+    if (this.square == undefined) {
       return false
     }
-    return this.canReachVertically(s, false) || this.canReachHorizontally(s, false)
+    if (!s.isEmpty()) {
+      return false
+    }
+    return this.canReachVertically(s) || this.canReachHorizontally(s)
   }
 
   canAttack(s: Square) {
-    if (s == undefined || this.square == undefined) {
+    if (this.square == undefined) {
       return false
     }
-    if (!s.hasPieceWithColor(!this.white)) {
+    if (s.isEmpty() || s.hasPieceWithColor(this.color)) {
       return false
     }
-    return this.canReachVertically(s, true) || this.canReachHorizontally(s, true)
+    return this.canReachVertically(s) || this.canReachHorizontally(s)
   }
 
-  canReachVertically(s: Square, allowPiece: boolean): boolean {
-    if (s == undefined || this.square == undefined) {
+  canReachVertically(s: Square): boolean {
+    if (this.square == s || this.square == undefined) {
       return false
     }
-    if ((!allowPiece && !s.isEmpty()) || !s.inbounds) {
+    if (!s.inbounds) {
       return false
     }
     var rowDifference = s.row - this.square.row
@@ -41,14 +35,20 @@ export default class Rook {
     var board = this.square.board
     var nearerRow = s.row - rowDifference / Math.abs(rowDifference)
     var nearerSquare = board.getSquare(nearerRow, s.column)
-    return nearerSquare == this.square || this.canReachVertically(nearerSquare, false)
-  }
-
-  canReachHorizontally(s: Square, allowPiece: boolean): boolean {
-    if (s == undefined || this.square == undefined) {
+    if (nearerSquare == this.square) {
+      return true
+    }
+    if (!nearerSquare.isEmpty() || nearerSquare == undefined) {
       return false
     }
-    if ((!allowPiece && !s.isEmpty()) || !s.inbounds) {
+    return this.canReachVertically(nearerSquare)
+  }
+
+  canReachHorizontally(s: Square): boolean {
+    if (this.square == undefined) {
+      return false
+    }
+    if (!s.inbounds) {
       return false
     }
     var rowDifference = s.row - this.square.row
@@ -57,13 +57,12 @@ export default class Rook {
     var board = this.square.board
     var nearerColumn = s.column - columnDifference / Math.abs(columnDifference)
     var nearerSquare = board.getSquare(s.row, nearerColumn)
-    return nearerSquare == this.square || this.canReachHorizontally(nearerSquare, false)
-  }
-
-  moveTo(s: Square) {
-    this.square!.piece = undefined
-    this.square = s
-    s.piece = this
-    this.hasMoved = true
+    if (nearerSquare == this.square) {
+      return true
+    }
+    if (!nearerSquare.isEmpty() || nearerSquare == undefined) {
+      return false
+    }
+    return this.canReachHorizontally(nearerSquare)
   }
 }

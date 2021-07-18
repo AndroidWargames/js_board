@@ -1,5 +1,6 @@
 import Board from '../src/board'
 import Square from '../src/square'
+import { Color } from '../src/color'
 import Bishop from '../src/bishop'
 
 function newBoard() {
@@ -12,24 +13,12 @@ describe('bishop', () => {
   it('is instantiable', () => {
     var dummyboard = newBoard()
     var s = new Square(true, 0, 0, dummyboard)
-    expect(new Bishop(s, true)).toBeInstanceOf(Bishop)
-  })
-
-  it('can call moveTo', () => {
-    var board = newBoard()
-    var s = new Square(true, 0, 0, board)
-    var s2 = new Square(true, 1, 1, board)
-    var p = new Bishop(s, true)
-    expect(p.hasMoved).toBeFalsy()
-    p.moveTo(s2)
-    expect(s.isEmpty()).toBeTruthy()
-    expect(p.square).toEqual(s2)
-    expect(p.hasMoved).toBeTruthy()
+    expect(new Bishop(s, Color.White)).toBeInstanceOf(Bishop)
   })
 
   it('should be able to move diagonally', () => {
     var board = newBoard()
-    var b = new Bishop(board.getSquare(2, 2), true)
+    var b = new Bishop(board.getSquare(2, 2), Color.White)
     var upLeft = board.getSquare(3, 1)
     var upLeft2 = board.getSquare(4, 0)
     var upRight = board.getSquare(3, 3)
@@ -50,26 +39,26 @@ describe('bishop', () => {
 
   it('should be able to attack diagonally', () => {
     var board = newBoard()
-    var b = new Bishop(board.getSquare(1, 1), true)
+    var b = new Bishop(board.getSquare(1, 1), Color.White)
     var enemySquare = board.getSquare(4, 4)
-    var enemy = new Bishop(enemySquare, false)
+    var enemy = new Bishop(enemySquare, Color.Black)
     expect(b.canAttack(enemySquare)).toBeTruthy()
   })
 
   it('should not move in place', () => {
     var badWhiteBoard = newBoard()
     var startSquare = badWhiteBoard.getSquare(1, 1)
-    var b = new Bishop(startSquare, true)
+    var b = new Bishop(startSquare, Color.White)
     expect(b.canMoveTo(startSquare)).toBeFalsy()
   })
 
   it('should not move on or over pieces', () => {
     var badWhiteBoard = newBoard()
     var startSquare = badWhiteBoard.getSquare(1, 1)
-    var p = new Bishop(startSquare, true)
+    var p = new Bishop(startSquare, Color.White)
     var farSquare = badWhiteBoard.getSquare(4, 4)
     var allySquare = badWhiteBoard.getSquare(3, 3)
-    var ally = new Bishop(allySquare, false)
+    var ally = new Bishop(allySquare, Color.Black)
     expect(p.canMoveTo(allySquare)).toBeFalsy()
     expect(p.canMoveTo(farSquare)).toBeFalsy()
   })
@@ -77,7 +66,7 @@ describe('bishop', () => {
   it('should not move on or over out of bounds', () => {
     var badWhiteBoard = newBoard()
     var startSquare = badWhiteBoard.getSquare(1, 1)
-    var p = new Bishop(startSquare, true)
+    var p = new Bishop(startSquare, Color.White)
     var farSquare = badWhiteBoard.getSquare(4, 4)
     var deadSquare = badWhiteBoard.getSquare(3, 3)
     deadSquare.inbounds = false
@@ -88,7 +77,7 @@ describe('bishop', () => {
   it('should not move vertically', () => {
     var badWhiteBoard = newBoard()
     var startSquare = badWhiteBoard.getSquare(1, 1)
-    var b = new Bishop(startSquare, true)
+    var b = new Bishop(startSquare, Color.White)
     var forwardOneSquare = badWhiteBoard.getSquare(2, 1)
     var forwardTwoSquares = badWhiteBoard.getSquare(3, 1)
     expect(b.canMoveTo(forwardOneSquare)).toBeFalsy()
@@ -98,7 +87,7 @@ describe('bishop', () => {
   it('should not move horizontally', () => {
     var badWhiteBoard2 = newBoard()
     var startSquare = badWhiteBoard2.getSquare(1, 1)
-    var b = new Bishop(startSquare, true)
+    var b = new Bishop(startSquare, Color.White)
     var sideOneSquare = badWhiteBoard2.getSquare(1, 2)
     var sideTwoSquares = badWhiteBoard2.getSquare(1, 3)
     expect(b.canMoveTo(sideOneSquare)).toBeFalsy()
@@ -109,8 +98,8 @@ describe('bishop', () => {
     var whiteAttBoard = newBoard()
     var startSquare = whiteAttBoard.getSquare(1, 1)
     var whitePieceSquare = whiteAttBoard.getSquare(2, 0)
-    var ally = new Bishop(whitePieceSquare, true)
-    var whiteBishop = new Bishop(startSquare, true)
+    var ally = new Bishop(whitePieceSquare, Color.White)
+    var whiteBishop = new Bishop(startSquare, Color.White)
     expect(whiteBishop.canAttack(whitePieceSquare)).toBeFalsy()
   })
 
@@ -119,23 +108,23 @@ describe('bishop', () => {
     var startSquare = whiteAttBoard.getSquare(1, 1)
     var outOfBounds = whiteAttBoard.getSquare(2, 2)
     outOfBounds.inbounds = false
-    var whiteBishop = new Bishop(startSquare, true)
+    var whiteBishop = new Bishop(startSquare, Color.White)
     expect(whiteBishop.canAttack(outOfBounds)).toBeFalsy()
-    var enemy = new Bishop(outOfBounds, false)
+    var enemy = new Bishop(outOfBounds, Color.Black)
     expect(whiteBishop.canAttack(outOfBounds)).toBeFalsy()
   })
 
   it('should not move from undefined squares', () => {
     var board = newBoard()
     var startSquare = board.getSquare(0, 0)
-    var bishop = new Bishop(startSquare, true)
+    var bishop = new Bishop(startSquare, Color.White)
     bishop.square = undefined
 
     var newSquare = board.getSquare(1, 1)
     expect(bishop.canMoveTo(newSquare)).toBeFalsy()
 
     var enemySquare = board.getSquare(1, 1)
-    var enemyBishop = new Bishop(enemySquare, false)
+    var enemyBishop = new Bishop(enemySquare, Color.Black)
     expect(bishop.canAttack(enemySquare)).toBeFalsy()
   })
 })

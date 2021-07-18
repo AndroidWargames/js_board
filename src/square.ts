@@ -1,11 +1,12 @@
-import IPiece from '../src/piece'
+import Piece from '../src/piece'
 import Board from '../src/board'
+import { Color } from '../src/color'
 
 export default class Square {
   inbounds: boolean
   row: number
   column: number
-  piece?: IPiece
+  piece?: Piece
   board: Board
 
   constructor(inbounds: boolean, row: number, column: number, board: Board) {
@@ -20,10 +21,10 @@ export default class Square {
     return this.piece == undefined
   }
 
-  hasPieceWithColor(white: boolean) {
+  hasPieceWithColor(color: Color) {
     if (this.isEmpty()) {
       return false
     }
-    return this.piece!.white == white
+    return this.piece!.color == color
   }
 }
