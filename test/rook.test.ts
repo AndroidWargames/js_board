@@ -26,14 +26,6 @@ describe('rook', () => {
     expect(r.square).toEqual(s2)
   })
 
-  it('should not be able to move from nowhere', () => {
-    var board = newBoard()
-    var b = new Rook(board.getSquare(2, 2), Color.White)
-    b.square = undefined
-    var up = board.getSquare(3, 2)
-    expect(b.canMoveTo(up)).toBeFalsy()
-  })
-
   it('should be able to move vertically', () => {
     var board = newBoard()
     var b = new Rook(board.getSquare(2, 2), Color.White)
@@ -58,16 +50,6 @@ describe('rook', () => {
     expect(b.canMoveTo(Right2)).toBeTruthy()
     expect(b.canMoveTo(Left)).toBeTruthy()
     expect(b.canMoveTo(Left2)).toBeTruthy()
-  })
-
-  it('should not be able to attack from nowhere', () => {
-    var board = newBoard()
-    var rook = new Rook(board.getSquare(2, 2), Color.White)
-    rook.square = undefined
-
-    var enemy = new Rook(board.getSquare(3, 2), Color.Black)
-    var up = board.getSquare(3, 2)
-    expect(rook.canAttack(up)).toBeFalsy()
   })
 
   it('should be able to attack vertically', () => {
@@ -118,7 +100,7 @@ describe('rook', () => {
     var p = new Rook(startSquare, Color.White)
     var farSquare = badWhiteBoard.getSquare(1, 4)
     var deadSquare = badWhiteBoard.getSquare(1, 3)
-    deadSquare.inbounds = false
+    console.log(badWhiteBoard)
     expect(p.canMoveTo(deadSquare)).toBeFalsy()
     expect(p.canMoveTo(farSquare)).toBeFalsy()
   })

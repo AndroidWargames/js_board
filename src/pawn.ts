@@ -1,5 +1,5 @@
 import Square from '../src/square'
-import Piece from '../src/piece'
+import { Piece } from '../src/piece'
 import { Color } from '../src/color'
 
 export default class Pawn extends Piece {
